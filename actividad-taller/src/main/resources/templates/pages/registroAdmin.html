@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuario Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>body { background-color: #f1f5f9; font-family: sans-serif; }</style>
+</head>
+<body class="text-slate-800">
+<nav class="bg-white border-b border-slate-200 fixed w-full z-30 top-0 shadow-sm">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <a href="/panel" class="font-black text-xl text-slate-900 uppercase tracking-wide">Admin<span class="text-blue-600">Console</span></a>
+        <a th:href="@{/usuarios}" class="text-slate-500 font-bold text-xs hover:text-slate-900 uppercase tracking-widest">Cancelar</a>
+    </div>
+</nav>
+<div class="pt-28 px-4 pb-12 flex justify-center">
+    <div class="w-full max-w-lg bg-white p-10 rounded shadow-sm border border-slate-200">
+        <h2 class="text-2xl font-black text-slate-900 mb-8 uppercase tracking-tight" th:text="${usuario.id == null ? 'Registrar Usuario' : 'Editar Usuario'}"></h2>
+
+        <form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post" class="space-y-6">
+            <input type="hidden" th:field="*{id}" />
+            <div>
+                <label class="block mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Nombre Completo</label>
+                <input type="text" th:field="*{nombre}" class="bg-slate-50 border border-slate-300 rounded w-full p-3 focus:ring-blue-600 focus:border-blue-600 font-medium" required>
+            </div>
+            <div>
+                <label class="block mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Usuario (Login)</label>
+                <input type="text" th:field="*{username}" class="bg-slate-50 border border-slate-300 rounded w-full p-3 focus:ring-blue-600 focus:border-blue-600 font-medium" minlength="4" required>
+            </div>
+            <div>
+                <label class="block mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Email</label>
+                <input type="email" th:field="*{email}" class="bg-slate-50 border border-slate-300 rounded w-full p-3 focus:ring-blue-600 focus:border-blue-600 font-medium" required>
+            </div>
+            <div>
+                <label class="block mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Teléfono</label>
+                <input type="tel" th:field="*{telefono}" class="bg-slate-50 border border-slate-300 rounded w-full p-3 focus:ring-blue-600 focus:border-blue-600 font-medium" pattern="[0-9]{10}" title="Debe ingresar 10 números" required>
+            </div>
+            <div>
+                <label class="block mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Contraseña</label>
+                <input type="password" th:field="*{password}" class="bg-slate-50 border border-slate-300 rounded w-full p-3 focus:ring-blue-600 focus:border-blue-600 font-medium" placeholder="Dejar vacía para mantener la actual">
+            </div>
+            <div>
+                <label class="block mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Rol de Sistema</label>
+                <select th:field="*{rol}" class="bg-slate-50 border border-slate-300 rounded w-full p-3 focus:ring-blue-600 focus:border-blue-600 font-medium">
+                    <option value="ROLE_USUARIO">Usuario Estándar</option>
+                    <option value="ROLE_SOPORTE">Soporte Técnico</option>
+                    <option value="ROLE_ADMIN">Administrador</option>
+                </select>
+            </div>
+            <button type="submit" class="w-full text-white bg-green-600 hover:bg-green-700 font-bold rounded text-sm px-5 py-4 shadow-lg uppercase tracking-widest transition-transform hover:-translate-y-0.5 mt-4">Guardar Cambios</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

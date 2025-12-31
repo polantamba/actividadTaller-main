@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>body { font-family: sans-serif; }</style>
+</head>
+<body class="bg-slate-100">
+<div class="flex min-h-screen items-center justify-center p-6">
+    <div class="w-full max-w-lg bg-white rounded shadow-xl border border-slate-200 overflow-hidden">
+        <div class="bg-slate-900 p-8 text-center border-b border-slate-800">
+            <h2 class="text-2xl font-black text-white uppercase tracking-wide">Nuevo Usuario</h2>
+            <p class="text-slate-400 text-sm mt-2">Complete el formulario para obtener acceso.</p>
+        </div>
+
+        <div class="p-8">
+            <form th:action="@{/guardarRegistro}" th:object="${usuario}" method="post" class="space-y-5">
+                <input type="hidden" th:field="*{id}" />
+
+                <div>
+                    <label class="block mb-1 text-xs font-bold text-slate-500 uppercase tracking-wider">Nombre Completo</label>
+                    <input type="text" th:field="*{nombre}" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-3" placeholder="Ej: Juan Pérez" required>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-1 text-xs font-bold text-slate-500 uppercase tracking-wider">Usuario</label>
+                        <input type="text" th:field="*{username}" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-3" placeholder="Min 4 caracteres" minlength="4" required>
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-xs font-bold text-slate-500 uppercase tracking-wider">Teléfono</label>
+                        <input type="tel" th:field="*{telefono}" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-3" placeholder="10 dígitos" pattern="[0-9]{10}" title="Debe ingresar 10 números" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block mb-1 text-xs font-bold text-slate-500 uppercase tracking-wider">Correo Electrónico</label>
+                    <input type="email" th:field="*{email}" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-3" placeholder="juan@empresa.com" required>
+                </div>
+
+                <div>
+                    <label class="block mb-1 text-xs font-bold text-slate-500 uppercase tracking-wider">Contraseña</label>
+                    <input type="password" th:field="*{password}" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-3" placeholder="••••••••" required>
+                </div>
+
+                <div class="pt-6">
+                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 font-bold rounded text-sm px-5 py-4 text-center shadow-lg uppercase tracking-wide transition-all">CREAR CUENTA</button>
+                </div>
+            </form>
+
+            <div class="mt-8 text-center border-t border-slate-100 pt-6">
+                <a href="/login" class="text-blue-700 font-bold hover:underline text-sm uppercase">Ya tengo cuenta</a>
+                <br>
+                <a href="/" class="inline-block mt-4 text-xs text-slate-400 hover:text-slate-600 font-bold uppercase">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

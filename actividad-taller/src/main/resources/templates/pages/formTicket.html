@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Ticket</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>body { background-color: #f1f5f9; font-family: sans-serif; }</style>
+</head>
+<body class="text-slate-800">
+<nav class="bg-white border-b border-slate-200 fixed w-full z-30 top-0">
+    <div class="max-w-3xl mx-auto px-6 py-4 flex justify-between items-center">
+        <span class="font-black text-xl uppercase tracking-wide">HelpDesk<span class="text-blue-600">Pro</span></span>
+        <a href="/panel" class="text-xs font-bold text-slate-500 hover:text-red-600 transition-colors uppercase tracking-widest">Cancelar</a>
+    </div>
+</nav>
+
+<div class="pt-28 pb-16 flex justify-center px-6">
+    <div class="w-full max-w-2xl bg-white p-10 rounded shadow-sm border border-slate-200">
+        <div class="border-b border-slate-100 pb-8 mb-8">
+            <h2 class="text-3xl font-black text-slate-900 uppercase tracking-tight" th:text="${ticket.id == null ? 'Nueva Incidencia' : 'Editar Ticket #' + ticket.id}"></h2>
+            <p class="text-slate-500 text-sm mt-2 font-medium">Todos los campos son obligatorios.</p>
+        </div>
+
+        <form th:action="@{/ticket/guardar}" th:object="${ticket}" method="post" class="space-y-8">
+            <input type="hidden" th:field="*{id}" />
+            <input type="hidden" th:field="*{fechaCreacion}" />
+
+            <div>
+                <label class="block mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Asunto Principal</label>
+                <input type="text" th:field="*{titulo}" class="w-full bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 p-4 font-medium" placeholder="Mínimo 10 caracteres" minlength="10" required>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <label class="block mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Solicitante</label>
+                    <input type="text" th:field="*{nombreSolicitante}" class="w-full bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded p-4 font-medium" required>
+                </div>
+                <div>
+                    <label class="block mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Contacto</label>
+                    <input type="text" th:field="*{contactoSolicitante}" class="w-full bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded p-4 font-medium" required>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-8">
+                <div>
+                    <label class="block mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Categoría</label>
+                    <select th:field="*{categoria}" class="w-full bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded p-4 font-medium" required>
+                        <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nombre}"></option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Ubicación</label>
+                    <input type="text" th:field="*{ubicacion}" class="w-full bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded p-4 font-medium" required>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-8" sec:authorize="hasAnyRole('ADMIN', 'SOPORTE')">
+                <div>
+                    <label class="block mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Prioridad</label>
+                    <select th:field="*{prioridad}" class="w-full bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded p-4 font-medium">
+                        <option value="Baja">Baja</option>
+                        <option value="Media">Media</option>
+                        <option value="Alta">Alta</option>
+                        <option value="Critica">Crítica</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Estado</label>
+                    <select th:field="*{estado}" class="w-full bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded p-4 font-medium">
+                        <option th:each="e : ${estados}" th:value="${e.id}" th:text="${e.nombre}"></option>
+                    </select>
+                </div>
+            </div>
+            <input type="hidden" th:field="*{prioridad}" value="Media" sec:authorize="hasRole('USUARIO')" />
+
+            <div>
+                <label class="block mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Descripción Detallada</label>
+                <textarea th:field="*{descripcion}" rows="6" class="w-full bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded p-4 font-medium" placeholder="Mínimo 10 caracteres..." minlength="10" required></textarea>
+            </div>
+
+            <div class="pt-6">
+                <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 font-bold rounded text-sm px-6 py-4 shadow-lg uppercase tracking-widest transition-all">REGISTRAR TICKET</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

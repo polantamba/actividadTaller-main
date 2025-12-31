@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Técnico</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>body { background-color: #f1f5f9; font-family: sans-serif; }</style>
+</head>
+<body class="text-slate-800">
+<nav class="bg-white border-b border-slate-200 fixed w-full z-40 top-0 shadow-sm">
+    <div class="px-8 py-4 flex justify-between items-center">
+        <span class="text-xl font-black text-slate-900 uppercase tracking-wide">Soporte<span class="text-blue-600">Pro</span></span>
+        <div class="flex items-center gap-6">
+            <div class="text-right hidden sm:block">
+                <div class="text-sm font-bold text-slate-900" th:text="${usuario.nombre}">User</div>
+                <div class="text-[10px] text-slate-500 uppercase font-black tracking-widest">Técnico Nivel 1</div>
+            </div>
+            <form th:action="@{/logout}" method="post"><button class="text-xs font-bold text-white bg-red-600 px-4 py-2 rounded hover:bg-red-700 uppercase tracking-wide transition-colors">Salir</button></form>
+        </div>
+    </div>
+</nav>
+
+<div class="pt-28 px-8 pb-12 grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-[1800px] mx-auto">
+    <div class="lg:col-span-8 space-y-8">
+        <div class="bg-white rounded shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-blue-50">
+                <div>
+                    <h3 class="text-lg font-black text-blue-900 uppercase tracking-wide">Mis Casos Asignados</h3>
+                    <p class="text-xs text-blue-700 mt-1 font-medium">Tickets bajo tu responsabilidad.</p>
+                </div>
+                <span class="bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded shadow uppercase tracking-wider" th:text="${#lists.size(misTickets) + ' Activos'}">0 Activos</span>
+            </div>
+            <div class="p-8 grid gap-6">
+                <div th:if="${#lists.isEmpty(misTickets)}" class="text-center py-16 text-slate-400 bg-slate-50 rounded border border-dashed border-slate-300">
+                    <p class="font-bold text-lg">Bandeja Limpia</p>
+                    <p class="text-sm mt-2">No tienes trabajo pendiente. Revisa la cola general.</p>
+                </div>
+                <div th:each="t : ${misTickets}" class="flex flex-col md:flex-row md:items-center justify-between p-6 bg-white border border-slate-200 rounded hover:border-blue-400 hover:shadow-md transition-all">
+                    <div class="flex items-start gap-6">
+                        <div class="mt-1 flex flex-col items-center">
+                            <span class="block bg-slate-100 text-slate-600 text-[10px] font-bold px-3 py-1 rounded mb-2 w-full text-center" th:text="'#'+${t.id}"></span>
+                            <span th:classappend="${t.prioridad == 'Alta' || t.prioridad == 'Critica' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}" class="block text-[10px] uppercase font-black px-3 py-1 rounded w-full text-center" th:text="${t.prioridad}"></span>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-slate-900" th:text="${t.titulo}"></h4>
+                            <div class="flex flex-wrap items-center gap-3 text-sm text-slate-500 mt-3">
+                                <span class="bg-slate-50 px-3 py-1 rounded border border-slate-100 text-xs font-medium">Solicita: <strong th:text="${t.nombreSolicitante}"></strong></span>
+                                <span class="bg-slate-50 px-3 py-1 rounded border border-slate-100 text-xs font-medium">Cat: <strong th:text="${t.categoria.nombre}"></strong></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 md:mt-0 flex items-center gap-4">
+                        <span class="text-xs font-black px-4 py-2 rounded bg-slate-100 text-slate-700 uppercase tracking-widest" th:text="${t.estado.nombre}"></span>
+                        <a th:href="@{/ticket/editar/{id}(id=${t.id})}" class="bg-blue-700 text-white font-bold text-xs px-6 py-3 rounded hover:bg-blue-800 shadow uppercase tracking-wide transition-colors">Resolver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="lg:col-span-4 space-y-8">
+        <div class="bg-white rounded shadow-sm border border-slate-200 overflow-hidden h-fit sticky top-28">
+            <div class="p-6 border-b border-slate-100 bg-slate-900 flex justify-between items-center">
+                <div>
+                    <h3 class="font-black text-white uppercase tracking-wide">Cola General</h3>
+                    <p class="text-xs text-slate-400 mt-1">Pendientes de asignación.</p>
+                </div>
+                <span class="text-xs font-bold text-slate-900 bg-white px-3 py-1 rounded" th:text="${#lists.size(ticketsSinAsignar)}">0</span>
+            </div>
+            <div class="p-6 max-h-[600px] overflow-y-auto space-y-4 bg-slate-50">
+                <div th:if="${#lists.isEmpty(ticketsSinAsignar)}" class="text-center py-8">
+                    <span class="bg-green-100 text-green-700 font-bold px-4 py-2 rounded text-xs uppercase tracking-wide">¡Todo al día!</span>
+                </div>
+                <div th:each="t : ${ticketsSinAsignar}" class="bg-white p-5 rounded border border-slate-200 shadow-sm hover:border-slate-400 transition-all">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider" th:text="${t.categoria.nombre}"></span>
+                        <span class="text-[10px] font-black text-red-600 bg-red-50 px-2 py-1 rounded border border-red-100 uppercase tracking-wider" th:text="${t.prioridad}"></span>
+                    </div>
+                    <h5 class="font-bold text-slate-900 text-sm mb-2" th:text="${t.titulo}"></h5>
+                    <p class="text-xs text-slate-500 mb-4 line-clamp-2 leading-relaxed" th:text="${t.descripcion}"></p>
+                    <a th:href="@{/ticket/tomar/{id}(id=${t.id})}" class="block w-full text-center text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 py-3 rounded uppercase tracking-wide transition-colors">Tomar Caso</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
